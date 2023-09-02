@@ -24,12 +24,19 @@
   color: white;
 }
 
-#letter{
+/* #letter{
   color: gold;
-}
+} */
 
 #start{
+  padding: 5px;
+  font-weight: 700;
   cursor: pointer;
+}
+
+#start:hover{
+  transform: scale(1.1);
+  transition: 0.3s ease;
 }
 
 .maze-container {
@@ -96,4 +103,10 @@
 #btn:hover{
   transform: scale(1.1);
   transition: 0.3s ease;
+}
+
+@media only screen and (max-width : 672px) {
+  .maze-container{
+    transform: scale(0.9);
+  }
 }
