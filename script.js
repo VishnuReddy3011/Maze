@@ -1,10 +1,12 @@
 const mazeContainer = document.getElementById("maze-container");
-let isMazeSolved = false;
-let isNotSolvable = false;
+
+let isMazeSolved = false, isNotSolvable = false;
 let interval;
-function generateRandomMaze() {
+
+const generateRandomMaze = ()=>{
   const numRows = 6;
   const numCols = 6;
+
   const maze = [];
 
   for (let i = 0; i < numRows; i++) {
@@ -24,7 +26,6 @@ function generateRandomMaze() {
   return maze;
 }
 
-// Example usage:
 let maze = generateRandomMaze();
 
 const mazeWidth = maze[0].length; // Get the width of the maze
@@ -35,7 +36,7 @@ mazeContainer.style.gridTemplateColumns = `repeat(${mazeWidth}, ${cellSize}px)`;
 const ratPosition = { x: 0, y: 0 };
 const endPosition = { x: maze.length-1, y: maze[0].length-1 };
 
-function createMaze() {
+const createMaze = ()=>{
   mazeContainer.innerHTML = "";
   for (let i = 0; i < maze.length; i++) {
     for (let j = 0; j < maze[i].length; j++) {
@@ -49,11 +50,11 @@ function createMaze() {
       }
       if (i === ratPosition.x && j === ratPosition.y) {
         cell.classList.add("rat");
-        cell.textContent = "S";
+        cell.textContent = "Src";
       }
       else if(i === endPosition.x && j === endPosition.y){
         cell.classList.add("end");
-        cell.textContent = "E";
+        cell.textContent = "Dest";
       }
       else {
         if(maze[i][j] === 0){
@@ -71,14 +72,13 @@ function createMaze() {
   }
 }
 
-function solveMaze() {
+
+const solveMaze = ()=>{
     const queue = [{ x: ratPosition.x, y: ratPosition.y, path: [] }];
     const visited = Array.from({ length: maze.length }, () => Array(maze[0].length).fill(false));
     visited[ratPosition.x][ratPosition.y] = true;
 
-    
-
-    function visualizePath(path) {
+    const visualizePath = (path)=>{
         let stepIndex = 0;
         interval = setInterval(() => {
             if (stepIndex <= path.length-1) {
@@ -96,7 +96,7 @@ function solveMaze() {
         }, 500); // Adjust the interval time as needed
     }
 
-    while (queue.length > 0) {
+    while(queue.length > 0) {
         const { x, y, path } = queue.shift();
         const newPath = [...path, { x, y }];
 
@@ -109,18 +109,13 @@ function solveMaze() {
             { dx: 0, dy: 1 },
             { dx: -1, dy: 0 },
             { dx: 0, dy: -1 },
-            // { dx: 1, dy: 1 },
-            // { dx: -1, dy: -1 },
-            // { dx: 1, dy: -1 },
-            // { dx: -1, dy: 1 }
         ];
 
         for (const { dx, dy } of neighbors) {
             const newX = x + dx;
             const newY = y + dy;
-            if ((newX >= 0 && newX < maze[0].length) && (newY >= 0 && newY < maze.length) && maze[newX][newY] === 1 && visited[newX][newY] === false) {
+            if ((newX >= 0 && newX < maze.length) && (newY >= 0 && newY < maze[0].length) && maze[newX][newY] === 1 && visited[newX][newY] === false) {
                 visited[newX][newY] = true;
-                console.log(newPath);
                 queue.push({ x: newX, y: newY, path: newPath });
             }
         }
@@ -128,51 +123,41 @@ function solveMaze() {
     return false;
 }
 
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "s") {
-    if(isMazeSolved && !isNotSolvable){
-      document.getElementById("err").innerText = "Already solved...";
-    }
-    else if(!isMazeSolved){
-      const sol = solveMaze();
-      isMazeSolved = true;
-      if (!sol) {
-        isNotSolvable = true;
-          document.getElementById("err").innerText = "No solution exists...";
-      }
-    }
-  }
-});
+let err = document.getElementById("err");
 
 document.getElementById("start").addEventListener("click",()=>{
   if(isMazeSolved && !isNotSolvable){
-    document.getElementById("err").innerText = "Already solved...";
+    err.innerText = "Already solved...";
+    err.style.color = "green";
+    err.style.transition = "0.3s ease-in";
     return;
   }
   isMazeSolved = true;
   const sol = solveMaze();
   if (!sol) {
       isNotSolvable = true;
-      document.getElementById("err").innerText = "No solution exists...";
+      err.innerText = "No solution exists...";
+      err.style.color = "red";
+      err.style.transition = "0.3s ease-in";
   }
 })
 
 
-// Function to generate a new random maze
-function randomizeMaze() {
-  maze = generateRandomMaze(); // Use your generateRandomMaze function to create a new random maze
-  createMaze(); // Update the maze visualization
-  document.getElementById("err").innerText = ""; // Clear any error message
-  isMazeSolved = false;
-  isNotSolvable = false;
-  clearInterval(interval);
-}
+// // Function to generate a new random maze
+// function randomizeMaze() {
+
+// }
 
 // Add an event listener for the btn 
 document.getElementById("btn").addEventListener("click", () => {
-  randomizeMaze(); // Call the randomizeMaze function when btn is clicked
-  // location.reload();
+  maze = generateRandomMaze(); // Use your generateRandomMaze function to create a new random maze
+  createMaze(); // Update the maze visualization
+  err.style.color = "rgb(32, 32, 32)";
+  err.innerText = "..."; // Clear any error message
+  err.style.transition = "none";
+  isMazeSolved = false;
+  isNotSolvable = false;
+  clearInterval(interval);
 });
 
 createMaze();
