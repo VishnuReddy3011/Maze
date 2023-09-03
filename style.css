@@ -149,6 +149,7 @@
   }
   #start{
     margin-top: 20px;
+    padding: 4px 8px 4px 8px;
     transform: scale(1.5);
   }
   .rows-cols{
