@@ -3,9 +3,12 @@ const mazeContainer = document.getElementById("maze-container");
 let isMazeSolved = false, isNotSolvable = false;
 let interval;
 
+const rowVal = document.getElementById("rowDropdown");
+const colVal = document.getElementById("colDropdown");
+
 const generateRandomMaze = ()=>{
-  const numRows = 6;
-  const numCols = 6;
+  const numRows = rowVal.value;
+  const numCols = colVal.value;
 
   const maze = [];
 
@@ -28,13 +31,12 @@ const generateRandomMaze = ()=>{
 
 let maze = generateRandomMaze();
 
-const mazeWidth = maze[0].length; // Get the width of the maze
 const cellSize = 70; // Define the cell size in pixels
 
-mazeContainer.style.gridTemplateColumns = `repeat(${mazeWidth}, ${cellSize}px)`; 
+mazeContainer.style.gridTemplateColumns = `repeat(${maze[0].length}, ${cellSize}px)`; 
 
 const ratPosition = { x: 0, y: 0 };
-const endPosition = { x: maze.length-1, y: maze[0].length-1 };
+let endPosition = { x: maze.length-1, y: maze[0].length-1 };
 
 const createMaze = ()=>{
   mazeContainer.innerHTML = "";
@@ -71,7 +73,6 @@ const createMaze = ()=>{
     }
   }
 }
-
 
 const solveMaze = ()=>{
     const queue = [{ x: ratPosition.x, y: ratPosition.y, path: [] }];
@@ -142,16 +143,15 @@ document.getElementById("start").addEventListener("click",()=>{
   }
 })
 
-
-// // Function to generate a new random maze
-// function randomizeMaze() {
-
-// }
-
 // Add an event listener for the btn 
 document.getElementById("btn").addEventListener("click", () => {
   maze = generateRandomMaze(); // Use your generateRandomMaze function to create a new random maze
+  
+  mazeContainer.style.gridTemplateColumns = `repeat(${maze[0].length}, ${cellSize}px)`; 
+  
+  endPosition = { x: maze.length-1, y: maze[0].length-1 };
   createMaze(); // Update the maze visualization
+
   err.style.color = "rgb(32, 32, 32)";
   err.innerText = "..."; // Clear any error message
   err.style.transition = "none";
