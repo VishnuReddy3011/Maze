@@ -106,10 +106,10 @@ const solveMaze = ()=>{
             return true; // return BFS once shortest path is found
         }
         const neighbors = [
-            { dx: 1, dy: 0 },
-            { dx: 0, dy: 1 },
-            { dx: -1, dy: 0 },
-            { dx: 0, dy: -1 },
+            { dx: -1, dy: 0 }, // Up
+            { dx: 0, dy: -1 }, // Left
+            { dx: 1, dy: 0 }, // Down
+            { dx: 0, dy: 1 }, // Right
         ];
 
         for (const { dx, dy } of neighbors) {
